@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Orçamento — Galpão Metálico | Serralheria Porto Alegre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Montserrat',sans-serif;background:#F0F0F0;color:#1F1F1F;font-size:13px}
+input,select,textarea{font-family:'Montserrat',sans-serif}
+input[type=number]::-webkit-inner-spin-button{opacity:1}
+
+/* HEADER */
+.hdr{background:#1F1F1F;border-bottom:4px solid #FFC300;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.hdr-brand{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#FFC300;letter-spacing:2px;line-height:1}
+.hdr-slogan{font-size:10px;color:#7A7A7A;font-style:italic;letter-spacing:1px;margin-top:2px}
+.hdr-right{text-align:right}
+.hdr-right .doc{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px}
+.hdr-right p{font-size:10px;color:#7A7A7A}
+
+/* LAYOUT */
+.wrap{display:flex;gap:16px;max-width:1200px;margin:20px auto;padding:0 16px;align-items:flex-start;flex-wrap:wrap}
+.panel-left{flex:1 1 480px;min-width:300px}
+.panel-right{flex:0 0 340px;min-width:290px}
+
+/* ABAS */
+.tabs{display:flex;gap:2px;flex-wrap:wrap}
+.tab{padding:8px 13px;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;border-radius:4px 4px 0 0;background:#E0E0E0;color:#7A7A7A;letter-spacing:.3px;transition:all .15s;white-space:nowrap}
+.tab.active{background:#1F1F1F;color:#FFC300}
+.tab-content{background:#fff;border-radius:0 4px 4px 4px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.08);border:1px solid #E0E0E0;display:none}
+.tab-content.active{display:block}
+
+/* FORM ELEMENTS */
+.field{margin-bottom:10px}
+.field.small{margin-bottom:6px}
+.field label{display:block;font-size:10px;font-weight:700;color:#7A7A7A;text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px}
+.field label span{font-size:9px;color:#BBB;margin-left:4px;text-transform:none;letter-spacing:0;font-weight:400}
+.field-row{display:flex;align-items:center;gap:4px}
+.field-row .pfx{font-size:11px;color:#7A7A7A;font-weight:600;flex-shrink:0}
+.field-row .sfx{font-size:11px;color:#7A7A7A;flex-shrink:0}
+input[type=number],input[type=text],select,textarea{width:100%;padding:7px 10px;border:1.5px solid #E0E0E0;border-radius:4px;font-size:12px;font-weight:600;color:#1F1F1F;background:#fff;outline:none;transition:border .15s}
+input:focus,select:focus,textarea:focus{border-color:#FFC300}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+
+/* TOGGLE */
+.toggle-wrap{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:7px 10px;border-radius:4px;border:1.5px solid #E0E0E0;cursor:pointer;background:#F6F6F6;transition:all .15s}
+.toggle-wrap.on{background:#FFFBE6;border-color:#FFC300}
+.toggle-wrap .tgl-label{font-size:11px;font-weight:600;color:#1F1F1F}
+.toggle-wrap .tgl-sub{font-size:9px;color:#7A7A7A;margin-top:2px}
+.toggle-track{width:36px;height:20px;border-radius:10px;background:#CCC;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-track.on{background:#FFC300}
+.toggle-knob{width:16px;height:16px;border-radius:8px;background:#fff;position:absolute;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.toggle-knob.on{left:18px}
+
+/* SECTION HEADER */
+.sec-hdr{display:flex;align-items:center;gap:8px;margin:18px 0 12px;border-bottom:2px solid #FFC300;padding-bottom:6px}
+.sec-hdr span{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:#1F1F1F}
+.sec-hdr:first-child{margin-top:0}
+
+/* RESUMO GEOMÉTRICO */
+.geo-box{background:#FFFBE6;border:1px solid #FFC300;border-radius:4px;padding:10px 14px;margin-top:10px}
+.geo-box .geo-title{font-size:10px;font-weight:700;color:#7A7A7A;text-transform:uppercase;margin-bottom:8px}
+.geo-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 0}
+.geo-row{display:flex;justify-content:space-between;font-size:10.5px;padding:2px 0;border-bottom:1px dashed #E8D860}
+.geo-row span:first-child{color:#7A7A7A}
+.geo-row span:last-child{font-weight:700;color:#1F1F1F}
+
+/* AVISO */
+.aviso{background:#FFF3CD;border:1px solid #FFC300;border-radius:4px;padding:8px 12px;margin-bottom:14px;font-size:10.5px;color:#7A5200}
+
+/* PAINEL RESULTADO */
+.result-panel{background:#fff;border-radius:4px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.08);border:1px solid #E0E0E0;position:sticky;top:16px}
+.result-title{font-family:'Bebas Neue',sans-serif;font-size:17px;color:#1F1F1F;letter-spacing:1px;margin-bottom:14px;border-bottom:2px solid #FFC300;padding-bottom:6px}
+.info-bar{background:#1F1F1F;border-radius:4px;padding:8px 12px;margin-bottom:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px}
+.info-bar .ib-item{text-align:center}
+.info-bar .ib-v{font-family:'Bebas Neue',sans-serif;font-size:14px;color:#FFC300}
+.info-bar .ib-l{font-size:9px;color:#7A7A7A}
+
+/* RESULT ROWS */
+.rrow{display:flex;justify-content:space-between;align-items:center;padding:5px 8px;margin-bottom:2px;border-left:3px solid transparent}
+.rrow.indent{padding-left:20px}
+.rrow.bold .rl{font-size:11px;font-weight:700;color:#1F1F1F}
+.rrow.bold .rv{font-size:13px;font-weight:700;color:#1F1F1F}
+.rrow.sub .rl{font-size:10px;color:#7A7A7A;font-style:italic;font-weight:400}
+.rrow.sub .rv{font-size:11px;font-weight:600;color:#7A7A7A}
+.rrow.highlight{background:#FFFBE6;border-left:3px solid #FFC300}
+.rrow.highlight .rl,.rrow.highlight .rv{color:#1F1F1F;font-weight:700}
+.rdiv{border-top:1px dashed #E0E0E0;margin:6px 0}
+
+/* TOTAL CARD */
+.total-card{background:#1F1F1F;border-radius:6px;padding:14px 18px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.total-card .tc-label{font-family:'Bebas Neue',sans-serif;font-size:13px;color:#FFC300;letter-spacing:1px}
+.total-card .tc-sub{font-size:9px;color:#7A7A7A;margin-top:2px}
+.total-card .tc-value{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:1px}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.kpi{background:#F6F6F6;border-radius:4px;padding:8px 10px;border:1px solid #E0E0E0;text-align:center}
+.kpi .kpi-l{font-size:9px;color:#7A7A7A;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.kpi .kpi-v{font-size:13px;font-weight:700;color:#1F1F1F;margin-top:2px}
+
+/* BOTÃO PDF */
+.btn-pdf{width:100%;margin-top:14px;padding:13px 0;background:#FFC300;color:#1F1F1F;border:none;border-radius:4px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1.5px;cursor:pointer;transition:opacity .15s}
+.btn-pdf:hover{opacity:.85}
+.btn-pdf:disabled{opacity:.5;cursor:not-allowed}
+.btn-note{font-size:9.5px;color:#7A7A7A;text-align:center;margin-top:8px}
+
+@media(max-width:700px){
+  .wrap{padding:0 8px}
+  .panel-right{flex:1 1 100%}
+  .grid2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div>
+    <div class="hdr-brand">Serralheria Porto Alegre</div>
+    <div class="hdr-slogan">Força e precisão em cada estrutura.</div>
+  </div>
+  <div class="hdr-right">
+    <div class="doc">GERADOR DE ORÇAMENTO</div>
+    <p>Galpão Metálico — Telha Trapezoidal</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- PAINEL ESQUERDO -->
+  <div class="panel-left">
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('dimensoes')">📐 Dimensões</button>
+      <button class="tab" onclick="showTab('fechamento')">🧱 Fechamento</button>
+      <button class="tab" onclick="showTab('extras')">⚡ Extras</button>
+      <button class="tab" onclick="showTab('precos')">💰 Preços Base</button>
+      <button class="tab" onclick="showTab('cliente')">👤 Cliente</button>
+    </div>
+
+    <!-- ABA DIMENSÕES -->
+    <div id="tab-dimensoes" class="tab-content active">
+      <div class="grid2">
+        <div class="field"><label>Comprimento <span>m</span></label><input type="number" id="comp" value="30" min="6" oninput="calcular()"></div>
+        <div class="field"><label>Largura <span>m</span></label><input type="number" id="larg" value="15" min="6" oninput="calcular()"></div>
+        <div class="field"><label>Pé-direito livre <span>m</span></label><input type="number" id="alt" value="4" min="3" step="0.5" oninput="calcular()"></div>
+        <div class="field"><label>Beiral <span>m</span></label><input type="number" id="beiral" value="0.5" min="0" step="0.1" oninput="calcular()"></div>
+        <div class="field"><label>Inclinação do telhado <span>%</span></label><input type="number" id="inclinacao" value="15" min="5" max="30" oninput="calcular()"></div>
+        <div class="field"><label>Número de águas</label>
+          <select id="numAguas" onchange="calcular()">
+            <option value="2">2 águas (padrão)</option>
+            <option value="1">1 água (shed)</option>
+          </select>
+        </div>
+        <div class="field"><label>Espaçamento entre tesouras <span>m</span></label><input type="number" id="espTesoura" value="6" min="3" max="10" oninput="calcular()"></div>
+        <div class="field"><label>Translúcido na cobertura <span>%</span></label><input type="number" id="translucidoPct" value="5" min="0" max="30" oninput="calcular()"></div>
+      </div>
+      <div class="geo-box">
+        <div class="geo-title">Resumo Geométrico Calculado</div>
+        <div class="geo-grid">
+          <div class="geo-row"><span>Área de piso</span><span id="g-areaPiso">—</span></div>
+          <div class="geo-row"><span>Área de cobertura</span><span id="g-areaCob">—</span></div>
+          <div class="geo-row"><span>Perímetro lateral</span><span id="g-perim">—</span></div>
+          <div class="geo-row"><span>Nº de colunas</span><span id="g-col">—</span></div>
+          <div class="geo-row"><span>Nº de tesouras</span><span id="g-tes">—</span></div>
+          <div class="geo-row"><span>Total de terças</span><span id="g-terc">—</span></div>
+          <div class="geo-row"><span>Área fech. bloco</span><span id="g-fbloco">—</span></div>
+          <div class="geo-row"><span>Área fech. telha lat.</span><span id="g-ftelha">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA FECHAMENTO -->
+    <div id="tab-fechamento" class="tab-content">
+      <div class="field"><label>Tipo de fechamento lateral</label>
+        <select id="fechTipo" onchange="calcular(); mostrarMisto()">
+          <option value="aberto">Sem fechamento (Galpão Aberto)</option>
+          <option value="telha">Telha trapezoidal lateral — 100%</option>
+          <option value="misto" selected>Misto: Bloco + Telha</option>
+          <option value="bloco">Bloco estrutural total — 100%</option>
+        </select>
+      </div>
+      <div id="misto-opts" style="background:#F5F5F5;border-radius:4px;padding:10px 12px;border:1px solid #E0E0E0;margin-bottom:14px">
+        <div class="field small"><label>Altura da alvenaria (bloco) <span>m — bloco até aqui, telha acima</span></label>
+          <input type="number" id="altBloco" value="2" min="0.5" step="0.25" oninput="calcular()">
+        </div>
+        <div style="font-size:10px;color:#7A7A7A;margin-top:4px">Bloco: <span id="g-fbloco2">—</span> m² | Telha lateral: <span id="g-ftelha2">—</span> m²</div>
+      </div>
+
+      <div class="sec-hdr"><span>🪟 Aberturas no Fechamento</span></div>
+      <div class="toggle-wrap" id="tog-portao" onclick="toggleItem('portao')">
+        <div><div class="tgl-label">Portão deslizante</div><div class="tgl-sub">Estrutura metálica motorizado</div></div>
+        <div class="toggle-track" id="trk-portao"><div class="toggle-knob" id="knb-portao"></div></div>
+      </div>
+      <div id="sub-portao" style="display:none" class="field small"><label>Quantidade de portões</label><input type="number" id="qtdPortao" value="1" min="1" oninput="calcular()"></div>
+      <div class="toggle-wrap" id="tog-porta" onclick="toggleItem('porta')">
+        <div><div class="tgl-label">Porta pedestre</div><div class="tgl-sub">Porta de ferro com fechadura</div></div>
+        <div class="toggle-track" id="trk-porta"><div class="toggle-knob" id="knb-porta"></div></div>
+      </div>
+      <div id="sub-porta" style="display:none" class="field small"><label>Quantidade de portas</label><input type="number" id="qtdPorta" value="1" min="1" oninput="calcular()"></div>
+    </div>
+
+    <!-- ABA EXTRAS -->
+    <div id="tab-extras" class="tab-content">
+      <div class="sec-hdr"><span>⚡ Itens Adicionais</span></div>
+      <div class="toggle-wrap" id="tog-piso" onclick="toggleItem('piso')">
+        <div><div class="tgl-label">Piso industrial de concreto</div><div class="tgl-sub" id="piso-sub">—</div></div>
+        <div class="toggle-track" id="trk-piso"><div class="toggle-knob" id="knb-piso"></div></div>
+      </div>
+      <div class="toggle-wrap" id="tog-eletrica" onclick="toggleItem('eletrica')">
+        <div><div class="tgl-label">Instalação elétrica básica</div><div class="tgl-sub">Quadro, fiação, tomadas e iluminação</div></div>
+        <div class="toggle-track" id="trk-eletrica"><div class="toggle-knob" id="knb-eletrica"></div></div>
+      </div>
+      <div class="toggle-wrap" id="tog-calhaInt" onclick="toggleItem('calhaInt')">
+        <div><div class="tgl-label">Calha interna (dois lados)</div><div class="tgl-sub" id="calhaInt-sub">—</div></div>
+        <div class="toggle-track" id="trk-calhaInt"><div class="toggle-knob" id="knb-calhaInt"></div></div>
+      </div>
+      <div class="toggle-wrap" id="tog-wc" onclick="toggleItem('wc')">
+        <div><div class="tgl-label">Sanitário / Banheiro</div><div class="tgl-sub">Box, vaso, pia — alvenaria</div></div>
+        <div class="toggle-track" id="trk-wc"><div class="toggle-knob" id="knb-wc"></div></div>
+      </div>
+      <div class="toggle-wrap" id="tog-escritorio" onclick="toggleItem('escritorio')">
+        <div><div class="tgl-label">Escritório administrativo</div><div class="tgl-sub">Estrutura metálica c/ divisória</div></div>
+        <div class="toggle-track" id="trk-escritorio"><div class="toggle-knob" id="knb-escritorio"></div></div>
+      </div>
+      <div id="sub-escritorio" style="display:none" class="field small"><label>Área do escritório <span>m²</span></label><input type="number" id="areaEscritorio" value="20" min="5" oninput="calcular()"></div>
+      <div class="toggle-wrap" id="tog-mezanino" onclick="toggleItem('mezanino')">
+        <div><div class="tgl-label">Mezanino metálico</div><div class="tgl-sub">Piso metálico elevado com guarda-corpo</div></div>
+        <div class="toggle-track" id="trk-mezanino"><div class="toggle-knob" id="knb-mezanino"></div></div>
+      </div>
+      <div id="sub-mezanino" style="display:none" class="field small"><label>Área do mezanino <span>m²</span></label><input type="number" id="areaMezanino" value="30" min="5" oninput="calcular()"></div>
+    </div>
+
+    <!-- ABA PREÇOS -->
+    <div id="tab-precos" class="tab-content">
+      <div class="aviso">⚠️ Ajuste os preços unitários conforme suas cotações atuais. Os valores são multiplicados pelas quantidades calculadas.</div>
+
+      <div class="sec-hdr"><span>🏗️ Fundação</span></div>
+      <div class="grid2">
+        <div class="field small"><label>Sapata <span>R$/un</span></label><input type="number" id="p_sapata" value="420" oninput="calcular()"></div>
+        <div class="field small"><label>Escavação <span>R$/un</span></label><input type="number" id="p_escavacao" value="90" oninput="calcular()"></div>
+        <div class="field small"><label>Chumbador/base <span>R$/cj</span></label><input type="number" id="p_chumbador" value="180" oninput="calcular()"></div>
+        <div class="field small"><label>Baldrame <span>R$/m</span></label><input type="number" id="p_baldrame" value="85" oninput="calcular()"></div>
+        <div class="field small"><label>Regularização <span>R$ VB</span></label><input type="number" id="p_regularizacao" value="800" oninput="calcular()"></div>
+      </div>
+
+      <div class="sec-hdr"><span>🔩 Estrutura Metálica</span></div>
+      <div class="grid2">
+        <div class="field small"><label>Coluna <span>R$/un</span></label><input type="number" id="p_coluna" value="1280" oninput="calcular()"></div>
+        <div class="field small"><label>Tesoura <span>R$/un</span></label><input type="number" id="p_tesoura" value="2400" oninput="calcular()"></div>
+        <div class="field small"><label>Terças <span>R$/m</span></label><input type="number" id="p_terca" value="42" oninput="calcular()"></div>
+        <div class="field small"><label>Contraventamento <span>R$ VB</span></label><input type="number" id="p_contravent" value="2200" oninput="calcular()"></div>
+        <div class="field small"><label>Cantoneiras <span>R$ VB</span></label><input type="number" id="p_cantoneir" value="1100" oninput="calcular()"></div>
+        <div class="field small"><label>Pintura/Jateamento <span>R$ VB</span></label><input type="number" id="p_pintura" value="3800" oninput="calcular()"></div>
+        <div class="field small"><label>Fabricação <span>R$ VB</span></label><input type="number" id="p_fabricacao" value="4200" oninput="calcular()"></div>
+        <div class="field small"><label>Montagem <span>R$ VB</span></label><input type="number" id="p_montagem" value="5500" oninput="calcular()"></div>
+      </div>
+
+      <div class="sec-hdr"><span>🏠 Cobertura</span></div>
+      <div class="grid2">
+        <div class="field small"><label>Telha trapezoidal <span>R$/m²</span></label><input type="number" id="p_telha" value="48" oninput="calcular()"></div>
+        <div class="field small"><label>Translúcido fibra <span>R$/m²</span></label><input type="number" id="p_translucido" value="65" oninput="calcular()"></div>
+        <div class="field small"><label>Calha/Rufo <span>R$/m</span></label><input type="number" id="p_calha" value="38" oninput="calcular()"></div>
+        <div class="field small"><label>Cumeeira <span>R$/m</span></label><input type="number" id="p_cumeeira" value="35" oninput="calcular()"></div>
+        <div class="field small"><label>Parafusos/vedação <span>R$ VB</span></label><input type="number" id="p_parafusos" value="980" oninput="calcular()"></div>
+        <div class="field small"><label>MDO cobertura <span>R$ VB</span></label><input type="number" id="p_mdocob" value="3200" oninput="calcular()"></div>
+      </div>
+
+      <div class="sec-hdr"><span>🧱 Fechamento — Bloco</span></div>
+      <div class="grid2">
+        <div class="field small"><label>Bloco estrutural <span>R$/m²</span></label><input type="number" id="p_bloco" value="78" oninput="calcular()"></div>
+        <div class="field small"><label>Reboco <span>R$/m²</span></label><input type="number" id="p_reboco" value="22" oninput="calcular()"></div>
+        <div class="field small"><label>MDO alvenaria <span>R$/m²</span></label><input type="number" id="p_mdobloco" value="38" oninput="calcular()"></div>
+        <div class="field small"><label>Vergas <span>R$ VB</span></label><input type="number" id="p_vergas" value="1400" oninput="calcular()"></div>
+        <div class="field small"><label>Rufo topo parede <span>R$/m</span></label><input type="number" id="p_rufotopo" value="22" oninput="calcular()"></div>
+      </div>
+
+      <div class="sec-hdr"><span>🔧 Fechamento — Telha Lateral</span></div>
+      <div class="grid2">
+        <div class="field small"><label>Telha lateral <span>R$/m²</span></label><input type="number" id="p_telhalat" value="48" oninput="calcular()"></div>
+        <div class="field small"><label>Terças lat. <span>R$ VB</span></label><input type="number" id="p_tercaslat" value="2800" oninput="calcular()"></div>
+        <div class="field small"><label>Rufo interface <span>R$/m</span></label><input type="number" id="p_rufoint" value="22" oninput="calcular()"></div>
+        <div class="field small"><label>MDO telha lat. <span>R$ VB</span></label><input type="number" id="p_mdotelhalat" value="1800" oninput="calcular()"></div>
+      </div>
+
+      <div class="sec-hdr"><span>⚡ Extras</span></div>
+      <div class="grid2">
+        <div class="field small"><label>Piso concreto <span>R$/m²</span></label><input type="number" id="p_piso" value="95" oninput="calcular()"></div>
+        <div class="field small"><label>Instalação elétrica <span>R$ VB</span></label><input type="number" id="p_eletrica" value="8500" oninput="calcular()"></div>
+        <div class="field small"><label>Portão deslizante <span>R$/un</span></label><input type="number" id="p_portao" value="4800" oninput="calcular()"></div>
+        <div class="field small"><label>Porta pedestre <span>R$/un</span></label><input type="number" id="p_porta" value="1200" oninput="calcular()"></div>
+        <div class="field small"><label>Calha interna <span>R$/m</span></label><input type="number" id="p_calhaint" value="45" oninput="calcular()"></div>
+        <div class="field small"><label>Sanitário <span>R$ VB</span></label><input type="number" id="p_wc" value="6500" oninput="calcular()"></div>
+        <div class="field small"><label>Escritório <span>R$/m²</span></label><input type="number" id="p_escritorio" value="850" oninput="calcular()"></div>
+        <div class="field small"><label>Mezanino <span>R$/m²</span></label><input type="number" id="p_mezanino" value="680" oninput="calcular()"></div>
+      </div>
+
+      <div class="sec-hdr"><span>📊 Margem de Lucro</span></div>
+      <div class="field"><label>Margem sobre custo total <span>%</span></label><input type="number" id="p_margem" value="28" min="0" max="100" oninput="calcular()"></div>
+    </div>
+
+    <!-- ABA CLIENTE -->
+    <div id="tab-cliente" class="tab-content">
+      <div class="sec-hdr"><span>👤 Dados do Cliente / Proposta</span></div>
+      <div class="field"><label>Nº do Orçamento</label><input type="text" id="docNum" value="ORC-2026-001"></div>
+      <div class="field"><label>Nome do Cliente / Empresa</label><input type="text" id="nomeCliente" placeholder="Ex: João Silva / Indústria XYZ Ltda"></div>
+      <div class="field"><label>Local da Obra</label><input type="text" id="localObra" placeholder="Ex: Canoas / RS"></div>
+      <div class="grid2">
+        <div class="field"><label>Nome do Contato</label><input type="text" id="nomeContato"></div>
+        <div class="field"><label>Telefone / WhatsApp</label><input type="text" id="telContato"></div>
+      </div>
+      <div class="field"><label>Observações para o orçamento</label>
+        <textarea id="obsCliente" rows="4" placeholder="Ex: cliente quer entrega em 45 dias, portão duplo, obra em zona industrial..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAINEL RESULTADO -->
+  <div class="panel-right">
+    <div class="result-panel">
+      <div class="result-title">📋 Composição de Custos</div>
+
+      <div class="info-bar">
+        <div class="ib-item"><div class="ib-v" id="r-dim">—</div><div class="ib-l">Dimensões</div></div>
+        <div class="ib-item"><div class="ib-v" id="r-area">—</div><div class="ib-l">Área piso</div></div>
+        <div class="ib-item"><div class="ib-v" id="r-fech">—</div><div class="ib-l">Fechamento</div></div>
+      </div>
+
+      <div class="rrow bold"><span class="rl">FUNDAÇÃO</span><span class="rv" id="r-fund">—</span></div>
+      <div class="rrow indent sub"><span class="rl">Sapatas</span><span class="rv" id="r-fund-sap">—</span></div>
+      <div class="rrow indent sub"><span class="rl">Baldrame</span><span class="rv" id="r-fund-bal">—</span></div>
+      <div class="rrow indent sub"><span class="rl">Chumbadores</span><span class="rv" id="r-fund-chu">—</span></div>
+      <div class="rrow indent sub"><span class="rl">Escavação + Regularização</span><span class="rv" id="r-fund-esc">—</span></div>
+
+      <div class="rdiv"></div>
+      <div class="rrow bold"><span class="rl">ESTRUTURA METÁLICA</span><span class="rv" id="r-est">—</span></div>
+      <div class="rrow indent sub"><span class="rl">Colunas</span><span class="rv" id="r-est-col">—</span></div>
+      <div class="rrow indent sub"><span class="rl">Tesouras</span><span class="rv" id="r-est-tes">—</span></div>
+      <div class="rrow indent sub"><span class="rl">Terças</span><span class="rv" id="r-est-ter">—</span></div>
+      <div class="rrow indent sub"><span class="rl">Contravent. + Cantoneiras</span><span class="rv" id="r-est-cnt">—</span></div>
+      <div class="rrow indent sub"><span class="rl">Pintura + Fabric. + Montagem</span><span class="rv" id="r-est-pfm">—</span></div>
+
+      <div class="rdiv"></div>
+      <div class="rrow bold"><span class="rl">COBERTURA</span><span class="rv" id="r-cob">—</span></div>
+      <div class="rrow indent sub"><span class="rl">Telha + Translúcido</span><span class="rv" id="r-cob-tel">—</span></div>
+      <div class="rrow indent sub"><span class="rl">Calha + Cumeeira</span><span class="rv" id="r-cob-cal">—</span></div>
+      <div class="rrow indent sub"><span class="rl">MDO + Fixação</span><span class="rv" id="r-cob-mdo">—</span></div>
+
+      <div id="bloco-fech" style="display:none">
+        <div class="rdiv"></div>
+        <div class="rrow bold"><span class="rl">FECHAMENTO LATERAL</span><span class="rv" id="r-fech-tot">—</span></div>
+        <div class="rrow indent sub" id="row-fech-bloco" style="display:none"><span class="rl">Bloco (mat + reboco + MDO)</span><span class="rv" id="r-fech-bloco">—</span></div>
+        <div class="rrow indent sub" id="row-fech-verga" style="display:none"><span class="rl">Vergas + Rufo topo</span><span class="rv" id="r-fech-verga">—</span></div>
+        <div class="rrow indent sub" id="row-fech-tela" style="display:none"><span class="rl">Telha lateral + Terças</span><span class="rv" id="r-fech-tela">—</span></div>
+        <div class="rrow indent sub" id="row-fech-rufo" style="display:none"><span class="rl">Rufos + MDO lateral</span><span class="rv" id="r-fech-rufo">—</span></div>
+      </div>
+
+      <div id="bloco-extras" style="display:none">
+        <div class="rdiv"></div>
+        <div class="rrow bold"><span class="rl">EXTRAS / ADICIONAIS</span><span class="rv" id="r-ext-tot">—</span></div>
+        <div class="rrow indent sub" id="row-ext-piso" style="display:none"><span class="rl">Piso industrial</span><span class="rv" id="r-ext-piso">—</span></div>
+        <div class="rrow indent sub" id="row-ext-elet" style="display:none"><span class="rl">Instalação elétrica</span><span class="rv" id="r-ext-elet">—</span></div>
+        <div class="rrow indent sub" id="row-ext-ptao" style="display:none"><span class="rl">Portão(ões) deslizante</span><span class="rv" id="r-ext-ptao">—</span></div>
+        <div class="rrow indent sub" id="row-ext-pta" style="display:none"><span class="rl">Porta(s) pedestre</span><span class="rv" id="r-ext-pta">—</span></div>
+        <div class="rrow indent sub" id="row-ext-cint" style="display:none"><span class="rl">Calha interna</span><span class="rv" id="r-ext-cint">—</span></div>
+        <div class="rrow indent sub" id="row-ext-wc" style="display:none"><span class="rl">Sanitário</span><span class="rv" id="r-ext-wc">—</span></div>
+        <div class="rrow indent sub" id="row-ext-esc" style="display:none"><span class="rl">Escritório</span><span class="rv" id="r-ext-esc">—</span></div>
+        <div class="rrow indent sub" id="row-ext-mez" style="display:none"><span class="rl">Mezanino</span><span class="rv" id="r-ext-mez">—</span></div>
+      </div>
+
+      <div style="margin:10px 0;border-top:2px solid #1F1F1F"></div>
+      <div class="rrow bold"><span class="rl">CUSTO TOTAL (sem margem)</span><span class="rv" id="r-custo">—</span></div>
+      <div class="rrow highlight"><span class="rl" id="r-margem-label">Margem (28%)</span><span class="rv" id="r-margem">—</span></div>
+
+      <div style="margin:10px 0"></div>
+      <div class="total-card">
+        <div><div class="tc-label" id="r-total-label">VALOR DE VENDA</div><div class="tc-sub" id="r-m2">—</div></div>
+        <div class="tc-value" id="r-total">—</div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-l">Custo/m²</div><div class="kpi-v" id="kpi-custom2">—</div></div>
+        <div class="kpi"><div class="kpi-l">Venda/m²</div><div class="kpi-v" id="kpi-vendam2">—</div></div>
+        <div class="kpi"><div class="kpi-l">Margem R$</div><div class="kpi-v" id="kpi-margemrs">—</div></div>
+        <div class="kpi"><div class="kpi-l">Margem %</div><div class="kpi-v" id="kpi-margempct">—</div></div>
+      </div>
+
+      <button class="btn-pdf" id="btnPdf" onclick="gerarPDF()">📄 Gerar PDF / Baixar Orçamento</button>
+      <div class="btn-note">Valores orientativos. Ajuste os preços base conforme cotações atuais.</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+// ── ESTADO DOS TOGGLES
+const toggles = { portao:false, porta:false, piso:false, eletrica:false, calhaInt:false, wc:false, escritorio:false, mezanino:false };
+const toggleSubs = { escritorio:'sub-escritorio', mezanino:'sub-mezanino', portao:'sub-portao', porta:'sub-porta' };
+
+function toggleItem(id) {
+  toggles[id] = !toggles[id];
+  const on = toggles[id];
+  document.getElementById('tog-'+id).classList.toggle('on', on);
+  document.getElementById('trk-'+id).classList.toggle('on', on);
+  document.getElementById('knb-'+id).classList.toggle('on', on);
+  if (toggleSubs[id]) document.getElementById(toggleSubs[id]).style.display = on ? 'block' : 'none';
+  calcular();
+}
+
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function mostrarMisto() {
+  document.getElementById('misto-opts').style.display = v('fechTipo') === 'misto' ? 'block' : 'none';
+}
+
+// ── HELPERS
+const v = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+const n = id => parseFloat(v(id)) || 0;
+const fmt = val => val.toLocaleString('pt-BR', { style:'currency', currency:'BRL' });
+const fmtN = (val, d=2) => val.toLocaleString('pt-BR', { minimumFractionDigits:d, maximumFractionDigits:d });
+const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+const show = (id, vis) => { const el = document.getElementById(id); if(el) el.style.display = vis ? '' : 'none'; };
+
+// ── CÁLCULO PRINCIPAL
+let lastCalc = {};
+function calcular() {
+  const comp = n('comp'), larg = n('larg'), alt = n('alt'), beiral = n('beiral');
+  const inclinacao = n('inclinacao'), numAguas = parseInt(v('numAguas')) || 2;
+  const espTesoura = n('espTesoura'), translucidoPct = n('translucidoPct');
+  const fechTipo = v('fechTipo'), altBloco = n('altBloco');
+  const margem_pct = n('p_margem');
+
+  // Geometria
+  const fatorInc = 1 / Math.cos(Math.atan(inclinacao / 100));
+  const compCob = comp + beiral * 2;
+  const largRampa = numAguas === 2 ? larg / 2 : larg;
+  const largCob = (numAguas === 2 ? (largRampa + beiral) * 2 : largRampa + beiral) * fatorInc;
+  const areaCob = compCob * largCob;
+  const areaPiso = comp * larg;
+  const perim = 2 * (comp + larg);
+  const areaFechTotal = perim * alt;
+  const numColunas = Math.max(Math.ceil(comp / espTesoura) * 2, 4);
+  const numTesouras = Math.ceil(comp / espTesoura) + 1;
+  const mTercas = numTesouras * larg * 1.05;
+  const areaTranslucido = areaCob * (translucidoPct / 100);
+  const areaTelha = areaCob - areaTranslucido;
+
+  let areaFechBloco = 0, areaFechTelha = 0;
+  if (fechTipo === 'bloco') areaFechBloco = areaFechTotal;
+  else if (fechTipo === 'telha') areaFechTelha = areaFechTotal;
+  else if (fechTipo === 'misto') { areaFechBloco = perim * altBloco; areaFechTelha = perim * (alt - altBloco); }
+
+  // FUNDAÇÃO
+  const fundSap = numColunas * n('p_sapata');
+  const fundEsc = numColunas * n('p_escavacao');
+  const fundChu = numColunas * n('p_chumbador');
+  const fundBal = perim * n('p_baldrame');
+  const fundReg = n('p_regularizacao');
+  const totalFund = fundSap + fundEsc + fundChu + fundBal + fundReg;
+
+  // ESTRUTURA
+  const estCol = numColunas * n('p_coluna');
+  const estTes = numTesouras * n('p_tesoura');
+  const estTer = mTercas * n('p_terca');
+  const estCnt = n('p_contravent');
+  const estCan = n('p_cantoneir');
+  const estPin = n('p_pintura');
+  const estFab = n('p_fabricacao');
+  const estMon = n('p_montagem');
+  const totalEst = estCol + estTes + estTer + estCnt + estCan + estPin + estFab + estMon;
+
+  // COBERTURA
+  const cobTel = areaTelha * n('p_telha');
+  const cobTra = areaTranslucido * n('p_translucido');
+  const cobCal = perim * n('p_calha');
+  const cobCum = (comp + 2) * n('p_cumeeira');
+  const cobPar = n('p_parafusos');
+  const cobMdo = n('p_mdocob');
+  const totalCob = cobTel + cobTra + cobCal + cobCum + cobPar + cobMdo;
+
+  // FECHAMENTO
+  let fbMat=0, fbReb=0, fbMdo=0, fbVer=0, fbRuf=0, ftMat=0, ftTer=0, ftRuf=0, ftMdo=0;
+  if (areaFechBloco > 0) {
+    fbMat = areaFechBloco * n('p_bloco');
+    fbReb = areaFechBloco * n('p_reboco');
+    fbMdo = areaFechBloco * n('p_mdobloco');
+    fbVer = n('p_vergas');
+    fbRuf = perim * n('p_rufotopo');
+  }
+  if (areaFechTelha > 0) {
+    ftMat = areaFechTelha * n('p_telhalat');
+    ftTer = n('p_tercaslat');
+    ftRuf = perim * n('p_rufoint');
+    ftMdo = n('p_mdotelhalat');
+  }
+  const totalFech = fbMat+fbReb+fbMdo+fbVer+fbRuf+ftMat+ftTer+ftRuf+ftMdo;
+
+  // EXTRAS
+  const extPiso  = toggles.piso      ? areaPiso * n('p_piso') : 0;
+  const extElet  = toggles.eletrica  ? n('p_eletrica') : 0;
+  const extPtao  = toggles.portao    ? n('qtdPortao') * n('p_portao') : 0;
+  const extPta   = toggles.porta     ? n('qtdPorta') * n('p_porta') : 0;
+  const extCint  = toggles.calhaInt  ? comp * 2 * n('p_calhaint') : 0;
+  const extWc    = toggles.wc        ? n('p_wc') : 0;
+  const extEsc   = toggles.escritorio? n('areaEscritorio') * n('p_escritorio') : 0;
+  const extMez   = toggles.mezanino  ? n('areaMezanino') * n('p_mezanino') : 0;
+  const totalExt = extPiso+extElet+extPtao+extPta+extCint+extWc+extEsc+extMez;
+
+  const totalCusto = totalFund + totalEst + totalCob + totalFech + totalExt;
+  const margemVal = totalCusto * (margem_pct / 100);
+  const totalVenda = totalCusto + margemVal;
+  const m2Venda = totalVenda / areaPiso;
+
+  // ── ATUALIZAR UI — GEO
+  set('g-areaPiso', fmtN(areaPiso) + ' m²');
+  set('g-areaCob',  fmtN(areaCob)  + ' m²');
+  set('g-perim',    fmtN(perim)    + ' m');
+  set('g-col',      numColunas);
+  set('g-tes',      numTesouras);
+  set('g-terc',     fmtN(mTercas)  + ' m');
+  set('g-fbloco',   fmtN(areaFechBloco) + ' m²');
+  set('g-ftelha',   fmtN(areaFechTelha) + ' m²');
+  set('g-fbloco2',  fmtN(areaFechBloco));
+  set('g-ftelha2',  fmtN(areaFechTelha));
+  document.getElementById('piso-sub').textContent = `${comp}×${larg}m = ${fmtN(areaPiso)} m²`;
+  document.getElementById('calhaInt-sub').textContent = `≈${fmtN(comp*2)} m de calha interna`;
+
+  // ── ATUALIZAR UI — RESULTADO
+  const fechLabels = { aberto:'Aberto', telha:'Telha', misto:'Misto', bloco:'Bloco' };
+  set('r-dim',   `${comp}×${larg}×${alt}m`);
+  set('r-area',  `${fmtN(areaPiso)} m²`);
+  set('r-fech',  fechLabels[fechTipo] || '—');
+
+  set('r-fund',     fmt(totalFund));
+  set('r-fund-sap', fmt(fundSap));
+  set('r-fund-bal', fmt(fundBal));
+  set('r-fund-chu', fmt(fundChu));
+  set('r-fund-esc', fmt(fundEsc + fundReg));
+
+  set('r-est',     fmt(totalEst));
+  set('r-est-col', fmt(estCol));
+  set('r-est-tes', fmt(estTes));
+  set('r-est-ter', fmt(estTer));
+  set('r-est-cnt', fmt(estCnt + estCan));
+  set('r-est-pfm', fmt(estPin + estFab + estMon));
+
+  set('r-cob',     fmt(totalCob));
+  set('r-cob-tel', fmt(cobTel + cobTra));
+  set('r-cob-cal', fmt(cobCal + cobCum));
+  set('r-cob-mdo', fmt(cobMdo + cobPar));
+
+  show('bloco-fech', totalFech > 0);
+  if (totalFech > 0) {
+    set('r-fech-tot',  fmt(totalFech));
+    show('row-fech-bloco', fbMat > 0); set('r-fech-bloco', fmt(fbMat+fbReb+fbMdo));
+    show('row-fech-verga', fbVer > 0); set('r-fech-verga', fmt(fbVer+fbRuf));
+    show('row-fech-tela',  ftMat > 0); set('r-fech-tela',  fmt(ftMat+ftTer));
+    show('row-fech-rufo',  ftRuf > 0); set('r-fech-rufo',  fmt(ftRuf+ftMdo));
+  }
+
+  show('bloco-extras', totalExt > 0);
+  if (totalExt > 0) {
+    set('r-ext-tot', fmt(totalExt));
+    show('row-ext-piso', extPiso>0); set('r-ext-piso', fmt(extPiso));
+    show('row-ext-elet', extElet>0); set('r-ext-elet', fmt(extElet));
+    show('row-ext-ptao', extPtao>0); set('r-ext-ptao', fmt(extPtao));
+    show('row-ext-pta',  extPta>0);  set('r-ext-pta',  fmt(extPta));
+    show('row-ext-cint', extCint>0); set('r-ext-cint', fmt(extCint));
+    show('row-ext-wc',   extWc>0);   set('r-ext-wc',   fmt(extWc));
+    show('row-ext-esc',  extEsc>0);  set('r-ext-esc',  fmt(extEsc));
+    show('row-ext-mez',  extMez>0);  set('r-ext-mez',  fmt(extMez));
+  }
+
+  set('r-custo',       fmt(totalCusto));
+  document.getElementById('r-margem-label').textContent = `Margem de lucro (${margem_pct}%)`;
+  set('r-margem',      fmt(margemVal));
+  set('r-total-label', `VALOR DE VENDA — ${comp}×${larg}×${alt}m`);
+  set('r-total',       fmt(totalVenda));
+  set('r-m2',          `R$ ${fmtN(m2Venda)}/m² de área de piso`);
+  set('kpi-custom2',   fmt(totalCusto / areaPiso));
+  set('kpi-vendam2',   fmt(m2Venda));
+  set('kpi-margemrs',  fmt(margemVal));
+  set('kpi-margempct', `${fmtN(margem_pct)}%`);
+
+  // Salva para o PDF
+  lastCalc = { comp, larg, alt, areaPiso, areaCob, perim, numColunas, numTesouras, mTercas, areaFechBloco, areaFechTelha, areaTranslucido, areaTelha,
+    totalFund, fundSap, fundEsc, fundChu, fundBal, fundReg,
+    totalEst, estCol, estTes, estTer, estCnt, estCan, estPin, estFab, estMon,
+    totalCob, cobTel, cobTra, cobCal, cobCum, cobPar, cobMdo,
+    totalFech, fbMat, fbReb, fbMdo, fbVer, fbRuf, ftMat, ftTer, ftRuf, ftMdo,
+    totalExt, extPiso, extElet, extPtao, extPta, extCint, extWc, extEsc, extMez,
+    totalCusto, margemVal, totalVenda, m2Venda, margem_pct, fechTipo };
+}
+
+// ── GERADOR DE PDF
+function gerarPDF() {
+  const btn = document.getElementById('btnPdf');
+  btn.disabled = true; btn.textContent = '⏳ Gerando PDF...';
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+    const c = lastCalc;
+    const W = 210, PAD = 14;
+    let y = 0;
+
+    const docNum   = v('docNum') || 'ORC-2026-001';
+    const cliente  = v('nomeCliente') || 'A definir';
+    const local    = v('localObra') || 'A definir';
+    const contato  = v('nomeContato');
+    const tel      = v('telContato');
+    const obs      = v('obsCliente');
+
+    const h2r = hex => { const r=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return r?[parseInt(r[1],16),parseInt(r[2],16),parseInt(r[3],16)]:[0,0,0]; };
+    const sf  = hex => doc.setFillColor(...h2r(hex));
+    const sd  = hex => doc.setDrawColor(...h2r(hex));
+    const st  = hex => doc.setTextColor(...h2r(hex));
+    const fmtP = val => typeof val==='number' ? val.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : String(val);
+    const fmtPN = (val,d=2) => typeof val==='number' ? val.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d}) : String(val);
+
+    // HEADER
+    sf('#1F1F1F'); doc.rect(0,0,W,24,'F');
+    sf('#FFC300'); doc.rect(0,24,W,2,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(18); st('#FFC300');
+    doc.text('SERRALHERIA PORTO ALEGRE', PAD, 11);
+    doc.setFontSize(7); doc.setFont('helvetica','italic'); st('#7A7A7A');
+    doc.text('Forca e precisao em cada estrutura.', PAD, 17);
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); st('#FFFFFF');
+    doc.text('ORCAMENTO DE GALPAO METALICO', W-PAD, 10, {align:'right'});
+    doc.setFontSize(7); doc.setFont('helvetica','normal'); st('#7A7A7A');
+    doc.text(`${docNum}  |  ${new Date().toLocaleDateString('pt-BR')}  |  Validade: 15 dias`, W-PAD, 16, {align:'right'});
+    doc.text('CNPJ: 59.866.419/0001-73  |  WhatsApp: (51) 99944-4064', W-PAD, 21, {align:'right'});
+    y = 32;
+
+    // DADOS
+    sf('#F6F6F6'); doc.rect(PAD,y,W-PAD*2,20,'F');
+    sd('#E0E0E0'); doc.rect(PAD,y,W-PAD*2,20,'S');
+    const dados = [
+      ['Cliente', cliente.substring(0,30)],
+      ['Local da Obra', local.substring(0,30)],
+      ['Dimensoes', `${c.comp} x ${c.larg} x ${c.alt}m`],
+      ['Area de Piso', `${fmtPN(c.areaPiso)} m2`],
+      ['Fechamento', {aberto:'Sem fechamento',telha:'Telha lateral 100%',misto:'Misto Bloco+Telha',bloco:'Bloco total'}[c.fechTipo]],
+      ['Contato', `${contato} ${tel}`.trim() || '—'],
+    ];
+    dados.forEach((d,i) => {
+      const col=i%3, row=Math.floor(i/3);
+      const cx=PAD+4+col*60, cy=y+6+row*9;
+      st('#7A7A7A'); doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.text(d[0].toUpperCase(), cx, cy);
+      st('#1F1F1F'); doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.text(String(d[1]).substring(0,26), cx, cy+4);
+    });
+    y += 26;
+
+    // FUNÇÃO TABELA
+    const tbl = (titulo, linhas, subtotal) => {
+      if (y > 248) { doc.addPage(); y = 14; }
+      sf('#3A3A3A'); doc.rect(PAD,y,W-PAD*2,7,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(8); st('#FFC300');
+      doc.text(titulo, PAD+3, y+5); y += 7;
+      sf('#1F1F1F'); doc.rect(PAD,y,W-PAD*2,6,'F');
+      doc.setFontSize(7); st('#FFFFFF');
+      doc.text('ITEM', PAD+2, y+4.2);
+      doc.text('QTD', PAD+95, y+4.2, {align:'right'});
+      doc.text('UN', PAD+106, y+4.2, {align:'right'});
+      doc.text('UNIT.(R$)', PAD+130, y+4.2, {align:'right'});
+      doc.text('TOTAL(R$)', W-PAD-2, y+4.2, {align:'right'});
+      y += 6;
+      linhas.forEach((r,i) => {
+        if (y > 268) { doc.addPage(); y = 14; }
+        if (i%2===1) { sf('#F6F6F6'); doc.rect(PAD,y,W-PAD*2,6,'F'); }
+        sd('#E8E8E8'); doc.rect(PAD,y,W-PAD*2,6,'S');
+        doc.setFont('helvetica','normal'); doc.setFontSize(7.5); st('#1F1F1F');
+        doc.text(String(r[0]).substring(0,54), PAD+2, y+4.2);
+        st('#7A7A7A');
+        doc.text(String(r[1]), PAD+95, y+4.2, {align:'right'});
+        doc.text(String(r[2]), PAD+106, y+4.2, {align:'right'});
+        doc.text(fmtP(r[3]), PAD+130, y+4.2, {align:'right'});
+        doc.setFont('helvetica','bold'); st('#1F1F1F');
+        doc.text(fmtP(r[4]), W-PAD-2, y+4.2, {align:'right'});
+        y += 6;
+      });
+      sf('#F0ECE0'); doc.rect(PAD,y,W-PAD*2,7,'F');
+      sd('#FFC300'); doc.setLineWidth(0.5); doc.rect(PAD,y,W-PAD*2,7,'S'); doc.setLineWidth(0.2);
+      doc.setFont('helvetica','bold'); doc.setFontSize(8); st('#1F1F1F');
+      doc.text('SUBTOTAL', PAD+3, y+4.8);
+      doc.text(fmtP(subtotal), W-PAD-2, y+4.8, {align:'right'});
+      y += 11;
+    };
+
+    tbl('FUNDACAO — Alicerce, Sapatas e Vigas Baldrame', [
+      ['Sapatas de concreto armado (60x60x60cm, fck 25MPa)', c.numColunas, 'un', n('p_sapata'), c.fundSap],
+      ['Escavacao e lastro de brita', c.numColunas, 'un', n('p_escavacao'), c.fundEsc],
+      ['Chumbadores e chapa de base (o16mm)', c.numColunas, 'cj', n('p_chumbador'), c.fundChu],
+      ['Viga baldrame perimetral — 15x40cm', Math.round(c.perim), 'm', n('p_baldrame'), c.fundBal],
+      ['Regularizacao e nivelamento', 1, 'vb', n('p_regularizacao'), c.fundReg],
+    ], c.totalFund);
+
+    tbl('ESTRUTURA METALICA — Colunas, Tesouras, Tercas', [
+      ['Colunas principais — Perfil W ou tubo retangular', c.numColunas, 'un', n('p_coluna'), c.estCol],
+      ['Tesouras trelicadas duas aguas (vao '+c.larg+'m)', c.numTesouras, 'un', n('p_tesoura'), c.estTes],
+      ['Tercas de cobertura — Perfil Z ou U enformado', Math.round(c.mTercas), 'm', n('p_terca'), c.estTer],
+      ['Contraventamento longitudinal e de cobertura', 1, 'vb', n('p_contravent'), c.estCnt],
+      ['Cantoneiras de travamento e ligacao', 1, 'vb', n('p_cantoneir'), c.estCan],
+      ['Jateamento + primer anticorrosivo + acabamento', 1, 'vb', n('p_pintura'), c.estPin],
+      ['Fabricacao (corte, solda, furacao) + frete', 1, 'vb', n('p_fabricacao'), c.estFab],
+      ['Montagem e icamento da estrutura', 1, 'vb', n('p_montagem'), c.estMon],
+    ], c.totalEst);
+
+    tbl('COBERTURA — Telha Trapezoidal e Acessorios', [
+      ['Telha trapezoidal aco Zn pre-pintada 0,50mm', Math.round(c.areaTelha), 'm2', n('p_telha'), c.cobTel],
+      ['Translucido em fibra de vidro 2mm', Math.round(c.areaTranslucido), 'm2', n('p_translucido'), c.cobTra],
+      ['Rufo e calha galvanizada perimetral', Math.round(c.perim), 'm', n('p_calha'), c.cobCal],
+      ['Cumeeira e arremates laterais', c.comp+2, 'm', n('p_cumeeira'), c.cobCum],
+      ['Parafusos autobrocantes e vedacao EPDM', 1, 'vb', n('p_parafusos'), c.cobPar],
+      ['Mao de obra colocacao de telhas (NR-35)', 1, 'vb', n('p_mdocob'), c.cobMdo],
+    ], c.totalCob);
+
+    if (c.totalFech > 0) {
+      const fr = [];
+      if (c.fbMat>0) { fr.push(['Alvenaria bloco estrutural 14x19x39cm', Math.round(c.areaFechBloco), 'm2', n('p_bloco'), c.fbMat]); fr.push(['Reboco e emboco face externa', Math.round(c.areaFechBloco), 'm2', n('p_reboco'), c.fbReb]); fr.push(['MDO alvenaria + reboco', Math.round(c.areaFechBloco), 'm2', n('p_mdobloco'), c.fbMdo]); fr.push(['Vergas e contravergas', 1, 'vb', n('p_vergas'), c.fbVer]); fr.push(['Rufo/arremate topo da parede', Math.round(c.perim), 'm', n('p_rufotopo'), c.fbRuf]); }
+      if (c.ftMat>0) { fr.push(['Telha trapezoidal lateral 0,50mm', Math.round(c.areaFechTelha), 'm2', n('p_telhalat'), c.ftMat]); fr.push(['Tercas e montantes para telha lateral', 1, 'vb', n('p_tercaslat'), c.ftTer]); fr.push(['Rufos e arremates interface bloco/telha', Math.round(c.perim), 'm', n('p_rufoint'), c.ftRuf]); fr.push(['MDO colocacao telha lateral', 1, 'vb', n('p_mdotelhalat'), c.ftMdo]); }
+      tbl('FECHAMENTO LATERAL', fr, c.totalFech);
+    }
+
+    if (c.totalExt > 0) {
+      const er = [];
+      if (c.extPiso>0) er.push(['Piso industrial de concreto', Math.round(c.areaPiso), 'm2', n('p_piso'), c.extPiso]);
+      if (c.extElet>0) er.push(['Instalacao eletrica basica', 1, 'vb', n('p_eletrica'), c.extElet]);
+      if (c.extPtao>0) er.push(['Portao deslizante', n('qtdPortao'), 'un', n('p_portao'), c.extPtao]);
+      if (c.extPta>0)  er.push(['Porta pedestre', n('qtdPorta'), 'un', n('p_porta'), c.extPta]);
+      if (c.extCint>0) er.push(['Calha interna longitudinal', c.comp*2, 'm', n('p_calhaint'), c.extCint]);
+      if (c.extWc>0)   er.push(['Sanitario / Banheiro', 1, 'vb', n('p_wc'), c.extWc]);
+      if (c.extEsc>0)  er.push([`Escritorio administrativo (${n('areaEscritorio')}m2)`, n('areaEscritorio'), 'm2', n('p_escritorio'), c.extEsc]);
+      if (c.extMez>0)  er.push([`Mezanino metalico (${n('areaMezanino')}m2)`, n('areaMezanino'), 'm2', n('p_mezanino'), c.extMez]);
+      tbl('EXTRAS / ADICIONAIS', er, c.totalExt);
+    }
+
+    // RESUMO FINAL
+    if (y > 228) { doc.addPage(); y = 14; }
+    y += 4;
+    sd('#1F1F1F'); doc.setLineWidth(0.8); doc.line(PAD,y,W-PAD,y); doc.setLineWidth(0.2); y += 6;
+    const resumo = [
+      ['Fundacao (alicerce, sapatas e vigas)', c.totalFund, false],
+      ['Estrutura metalica completa', c.totalEst, false],
+      ['Cobertura trapezoidal', c.totalCob, false],
+    ];
+    if (c.totalFech>0) resumo.push(['Fechamento lateral', c.totalFech, false]);
+    if (c.totalExt>0)  resumo.push(['Extras / Adicionais', c.totalExt, false]);
+    resumo.push(['CUSTO TOTAL (sem margem)', c.totalCusto, true]);
+    resumo.push([`Margem de lucro (${c.margem_pct}%)`, c.margemVal, true]);
+
+    resumo.forEach(([label, valor, bold]) => {
+      if (bold) { sf(label.includes('Margem')?'#FFFBE6':'#F0F0F0'); doc.rect(PAD,y-4,W-PAD*2,7,'F'); }
+      doc.setFont('helvetica', bold?'bold':'normal'); doc.setFontSize(bold?9:8); st(bold?'#1F1F1F':'#7A7A7A');
+      doc.text(label, PAD+3, y);
+      doc.setFont('helvetica','bold'); st('#1F1F1F');
+      doc.text(fmtP(valor), W-PAD-2, y, {align:'right'});
+      y += 8;
+    });
+
+    y += 2;
+    sf('#1F1F1F'); doc.rect(PAD,y,W-PAD*2,14,'F');
+    sf('#FFC300'); doc.rect(PAD,y+13,W-PAD*2,1,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); st('#FFC300');
+    doc.text(`VALOR DE VENDA — GALPAO ${c.comp}x${c.larg}x${c.alt}m`, PAD+4, y+6);
+    doc.setFontSize(8); st('#7A7A7A');
+    doc.text(`R$ ${fmtPN(c.m2Venda)}/m2 de area de piso`, PAD+4, y+11.5);
+    doc.setFontSize(14); st('#FFFFFF');
+    doc.text(fmtP(c.totalVenda), W-PAD-2, y+9, {align:'right'});
+    y += 20;
+
+    // CONDIÇÕES
+    if (y > 252) { doc.addPage(); y = 14; }
+    sf('#F6F6F6'); doc.rect(PAD,y,W-PAD*2,22,'F');
+    sd('#E0E0E0'); doc.rect(PAD,y,W-PAD*2,22,'S');
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5); st('#1F1F1F');
+    doc.text('CONDICOES COMERCIAIS', PAD+3, y+5);
+    [['Pagamento: 50% aprovacao / 50% entrega','Validade: 15 dias a partir da emissao'],
+     ['Garantia: 12 meses contra defeitos fabricacao','Formas: PIX · Dinheiro · Cartao']].forEach((row,ri) => {
+      row.forEach((c2,ci) => {
+        const cx=PAD+3+ci*90, cy=y+11+ri*6;
+        sf('#FFC300'); doc.circle(cx,cy-1.5,1,'F');
+        doc.setFont('helvetica','normal'); doc.setFontSize(7.5); st('#1F1F1F');
+        doc.text(c2, cx+3, cy);
+      });
+    });
+    y += 26;
+
+    if (obs) {
+      sf('#FFFBE6'); doc.rect(PAD,y,W-PAD*2,12,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(7); st('#7A5200');
+      doc.text('OBSERVACOES:', PAD+3, y+5);
+      doc.setFont('helvetica','normal');
+      doc.text(obs.substring(0,120), PAD+3, y+10);
+      y += 16;
+    }
+
+    // ASSINATURAS
+    y += 6;
+    if (y > 263) { doc.addPage(); y = 14; }
+    sd('#1F1F1F'); doc.setLineWidth(0.4);
+    doc.line(PAD, y+12, PAD+80, y+12);
+    doc.line(W/2+5, y+12, W-PAD, y+12);
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5); st('#1F1F1F');
+    doc.text('Serralheria Porto Alegre', PAD, y+16);
+    doc.text(cliente.substring(0,30), W/2+5, y+16);
+    doc.setFont('helvetica','normal'); st('#7A7A7A');
+    doc.text('Responsavel Tecnico', PAD, y+20);
+    doc.text('Nome / CPF ou CNPJ', W/2+5, y+20);
+
+    // FOOTER
+    const pages = doc.getNumberOfPages();
+    for (let i=1; i<=pages; i++) {
+      doc.setPage(i);
+      sf('#1F1F1F'); doc.rect(0,284,W,13,'F');
+      doc.setFont('helvetica','normal'); doc.setFontSize(7); st('#7A7A7A');
+      doc.text('Instagram: @serralheria_poa  |  WhatsApp: (51) 99944-4064  |  CNPJ: 59.866.419/0001-73', PAD, 291);
+      doc.setFont('helvetica','bold'); st('#FFC300');
+      doc.text('SERRALHERIA PORTO ALEGRE', W/2, 291, {align:'center'});
+      st('#7A7A7A'); doc.setFont('helvetica','normal');
+      doc.text(`${docNum}  |  Pag. ${i}/${pages}`, W-PAD, 291, {align:'right'});
+    }
+
+    doc.save(`Orcamento_${docNum}_Galpao_${c.comp}x${c.larg}x${c.alt}m.pdf`);
+  } catch(err) {
+    alert('Erro ao gerar PDF: ' + err.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '📄 Gerar PDF / Baixar Orçamento';
+  }
+}
+
+// Inicializar
+mostrarMisto();
+calcular();
+</script>
+</body>
+</html>
